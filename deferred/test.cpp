@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include "deferred.h"
 
-TEST_CASE( "Factorials are computed", "[factorial]" ) {
+TEST_CASE( "Task is not executed if object is destructed before the time bound is reached", "[DeferredTask]" ) {
 	bool tripped=false;
 	{
 		DeferredTask d(
@@ -10,7 +10,10 @@ TEST_CASE( "Factorials are computed", "[factorial]" ) {
 			std::chrono::milliseconds(5000));
 	}
 	REQUIRE_FALSE(tripped);
-	tripped = false;
+}
+
+TEST_CASE( "Task IS executed if object persist beyond the time bound", "[DeferredTask]" ) {
+	bool tripped = false;
 	{
 		DeferredTask d(
 			[&tripped](){ tripped=true; },
